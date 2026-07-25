@@ -1,0 +1,58 @@
+/* .search-modal .modal-dialog {
+  margin: 0 !important;
+  max-width: 100% !important;
+  transform: translateY(-100%) !important;
+  transition: transform 0.3s ease-in-out !important;
+}
+
+.search-modal.show .modal-dialog {
+  transform: translateY(0) !important;
+} */
+.search-modal-dialog .modal-content {
+  width: 500px; /* adjust width */
+  max-width: 90%; 
+  margin: 0 auto;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  top: -170px; /* moves modal down from top */
+}
+
+.search-modal-dialog .modal-header {
+  padding: 10px 15px;
+  border-bottom: none;
+}
+
+.search-modal-dialog .modal-body {
+  max-height: 300px; /* adjust height of results list */
+  overflow-y: auto;
+  padding: 0;
+}
+
+.search-modal-dialog .list-group-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.search-modal-dialog .list-group-item:hover {
+  background-color: #f1f1f1;
+}
+.search-modal-dialog {
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Make collapsed navbar have a solid background on mobile */
+#main-navbar {
+  background-color: #2c2c2c; /* same as your navbar */
+  padding: 1rem; /* optional spacing */
+}
+
+/* Make links readable */
+#main-navbar .nav-link {
+  color: #fff; /* white text */
+}

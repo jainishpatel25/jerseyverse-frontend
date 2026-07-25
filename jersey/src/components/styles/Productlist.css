@@ -1,0 +1,139 @@
+
+
+.product-carousel {
+  background-color: #fff;
+  /* padding: 60px 0; */
+}
+
+.product-carousel h2 {
+  font-weight: 600;
+  font-size: 28px;
+  color: #1e1e1e;
+}
+
+.product-carousel p {
+  margin: 0;
+  color: #777;
+}
+
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.carousel-inner {
+  display: flex;
+  overflow: hidden;
+  gap: 1.5rem;
+  flex-wrap: nowrap;
+  width: 100%;
+  scroll-behavior: smooth;
+}
+
+.seeallbtn{
+color: #1e1e1e !important;
+text-decoration: none !important;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 10px;
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); */
+  text-align: left;
+  flex: 0 0 calc(25% - 1.5rem);
+  padding: 15px;
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.product-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  transition: transform 0.4s ease;
+  object-fit: cover;
+}
+
+/* .product-image:hover {
+  transform: scale(1.07);
+} */
+
+
+.rating {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.carousel-nav {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.carousel-nav.left {
+  margin-right: 10px;
+  border-radius: 50%;
+    background-color: #1e1e1e !important;
+
+}
+
+.carousel-nav.right {
+  margin-left: 10px;
+  border-radius: 50%;
+    background-color: #1e1e1e !important;
+
+}
+
+/* 📱 Mobile: Stack cards 1 by 1 */
+@media (max-width: 576px) {
+  .product-card {
+    flex: 0 0 85%;
+    min-width: 85%;
+  }
+  .product-carousel {
+    padding: 30px 0;
+  }
+  .product-carousel h1 {
+    font-size: 1.7rem;
+  }
+  .section-subtitle {
+    font-size: 1rem;
+  }
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.8;
+  }
+  .carousel-nav.left {
+    left: 5px;
+   
+  }
+  .carousel-nav.right {
+    right: 5px;
+  }
+}
+
+/* 📲 Tablet: Show 2 cards */
+@media (min-width: 577px) and (max-width: 991px) {
+  .product-card {
+    flex: 0 0 calc(50% - 1rem);
+    min-width: calc(50% - 1rem);
+  }
+}
+
+
+

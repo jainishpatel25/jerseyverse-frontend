@@ -1,0 +1,9 @@
+/* src/components/styles/ProductDetailPage.css */
+
+img {
+  border-radius: 10px;
+}
+
+button {
+  min-width: 40px;
+}

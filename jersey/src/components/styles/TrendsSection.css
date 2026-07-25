@@ -1,0 +1,120 @@
+
+.trends-section {
+  position: relative;
+  overflow: hidden;
+  background-color: #f4f4f4;
+  padding: 3rem 0;
+  padding-bottom: 0rem;
+  width: 99.5vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+.curve-bg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: 0 5rem;
+  width: 100%;
+  margin-top: 2%;
+  gap: 2rem;
+}
+
+.image-box img {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  border-radius: 40% 60% 40% 60% / 60% 40% 60% 40%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease;
+}
+.image-box img:hover {
+  transform: scale(1.05);
+}
+
+.text-box {
+  max-width: 500px;
+  padding: 2rem;
+}
+
+.text-box h3 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+
+.text-box p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.text-box button {
+  padding: 10px 20px;
+  background: #333;
+  color: #fff;
+  border: none;
+  margin-top: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.text-box button:hover {
+  background: #000;
+}
+
+.curve-svg svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 📱 Mobile: Stack image above text */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+
+  .text-box {
+    padding: 1.5rem 0;
+    max-width: 100%;
+  }
+
+  .text-box h3 {
+    font-size: 1.7rem;
+  }
+
+  .text-box p {
+    font-size: 0.95rem;
+  }
+
+  .text-box button {
+    margin: 1rem auto 0;
+    display: inline-block;
+  }
+
+  .image-box img {
+    max-width: 300px;
+  }
+}
+
+/* 📲 Tablet (landscape): Slightly tighter spacing */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .content-wrapper {
+    padding: 0 3rem;
+    gap: 1.5rem;
+  }
+
+  .text-box h3 {
+    font-size: 2rem;
+  }
+}

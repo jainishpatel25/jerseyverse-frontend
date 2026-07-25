@@ -1,0 +1,99 @@
+.shop-page{
+  background: #ffffff;
+  /* padding: 20px; */
+  
+  min-height: 100vh;
+}
+
+.product-box {
+  text-align: left;
+}
+
+.product-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-info {
+  margin-top: 8px;
+}
+
+.product-info h6 {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.product-info p {
+  font-weight: 500;
+}
+
+.sidebar {
+  background-color: #fff;
+  padding-left: 0px !important; /* reduce from default 16px+ */
+  padding-right: 10px;
+
+}
+
+
+.price-filter {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.price-filter h6 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-range {
+  accent-color: #000;
+}
+/* Mobile layout: width less than 768px */
+@media (max-width: 767px) {
+  /* Make sidebar full width and appear above main content */
+  .sidebar {
+    /* position:static !important; */
+    width: 100% !important;
+    min-height: auto;
+    order: -1; /* moves price filter above main content */
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+
+  /* Make main content full width */
+  .col-md-10 {
+    width: 100% !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Price slider full width */
+  .price-filter input[type="range"] {
+    width: 100%;
+  }
+
+  /* Search + sort on the same line */
+  .d-flex.justify-content-between.align-items-center.mb-4 {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .d-flex.justify-content-between.align-items-center.mb-4 .form-control {
+    flex: 1 1 auto;
+    min-width: 150px;
+  }
+
+  .d-flex.justify-content-between.align-items-center.mb-4 .form-select {
+    flex: 0 0 150px;
+  }
+
+  /* Product images responsive */
+  .product-img {
+    width: 100%;
+    height: auto;
+  }
+}
+

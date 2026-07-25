@@ -1,0 +1,140 @@
+
+.decorative-section {
+  position: relative;
+  width: 99.5vw;
+  background-color: #f4f4f4;
+  padding: 100px 20px;
+  margin-top: 60px;
+  margin-left: calc(-50vw + 50%); /* aa add kariyu*/
+  overflow: hidden;
+  text-align: center;
+}
+
+.decorative-background {
+  max-width: 100%;  /* aa add kariyu*/
+  margin: 0 auto;
+  padding: 0 20px;
+  z-index: 2;
+  /* position: relative; */
+}
+
+.decorative-background h2 {
+  font-size: 2.2rem;
+ 
+  margin-bottom: 20px;
+}
+
+.decorative-background p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.contact-button {
+  background-color: #333 !important;
+  border: none;
+  padding: 12px 28px;
+  font-size: 1rem;
+  border-radius: 6px;
+  color: #fff;
+  transition: background-color 0.3s ease;
+  cursor: pointer !important;
+}
+
+.contact-button:hover {
+  background-color: #000;
+}
+
+
+.decorative-section::before {
+  content: "";
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.15;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+
+
+/* base style for icons */
+.floating-icon {
+  position: absolute;
+  width: 60px;
+  opacity: 0.9;
+  animation: float 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* each icon positioned differently */
+.icon1 {
+  top: 10%;
+  left: 10%;
+  transform: rotate(-15deg);
+}
+
+.icon2 {
+  bottom: 10%;
+  right: 15%;
+  transform: rotate(25deg);
+}
+
+.icon3 {
+  top: 20%;
+  right: 10%;
+  animation: float-horizontal 5s ease-in-out infinite;
+}
+
+.icon4 {
+  bottom: 10%;
+  left: 8%;
+  transform: rotate(-10deg);
+  
+}
+.icon5 {
+  bottom: 50%;
+  left: 20%;
+   animation: float-horizontal 5s ease-in-out infinite;
+
+}
+
+/* simple float animation */
+@keyframes float {
+  0% { transform: translateY(0) rotate(var(--rotate, 0deg)); }
+  50% { transform: translateY(-15px) rotate(var(--rotate, 0deg)); }
+  100% { transform: translateY(0) rotate(var(--rotate, 0deg)); }
+}
+
+
+@keyframes float-horizontal {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-20px); } /* 👈 goes left */
+  100% { transform: translateX(0); }
+}
+
+@media (max-width: 768px) {
+  .icon1 {
+    top: 5%;
+    left: 5%;
+    animation: float-horizontal 4s ease-in-out infinite;
+  }
+  .icon2 {
+    bottom: 10%;
+    right: 5%;
+  }
+
+  .icon3{
+    top:5%;
+    animation: float 4s ease-in-out infinite;
+  
+  }
+
+  .icon5{
+    top: 5%;
+    left: 45%;
+  }
+}

@@ -1,0 +1,43 @@
+.footer-logo {
+  max-height: 100px;
+}
+
+.footer-bottom {
+  background-color: #2a2a2c;
+  padding: 15px 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.site-footer {
+  background-color: #343437;
+  color: #fff;
+  padding-top: 40px;
+  padding-bottom: 0;
+}
+
+.social-icons a {
+  background: #fff;
+  color: #000;
+  border-radius: 50%;
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  margin: 0 8px;
+  transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.1);
+}
+
+.address, .contact {
+  color: #ddd;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.icon {
+  vertical-align: middle;
+}

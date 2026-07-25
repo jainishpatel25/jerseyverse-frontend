@@ -1,0 +1,158 @@
+.my-account-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem 4rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.account-left {
+  flex: 2;
+}
+
+.account-left h2 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.account-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.option-box {
+  display: flex;
+  align-items: flex-start;
+  background-color: #f9f9f9;
+  padding: 1.2rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.option-box:hover {
+  background-color: #f0f0f0;
+}
+
+.option-box .icon {
+  margin-right: 1rem;
+  color: #518ecb;
+}
+
+.option-box h5 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.option-box p {
+  margin: 0.2rem 0 0 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.account-right {
+  flex: 1;
+  padding-left: 2rem;
+  /* border-left: 1px solid #ddd; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.profile-badge {
+  width: 50px;
+  height: 50px;
+  background-color: #2a7bdc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.account-right h5 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.account-right .muted {
+  color: #888;
+  margin-bottom: 1rem;
+}
+
+.profile-info p {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+}
+
+.profile-info p svg {
+  margin-right: 8px;
+  color: #555;
+}
+
+.edit-link {
+  color: #0d6efd;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.edit-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .my-account-container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .account-left,
+  .account-right {
+    min-width: 100%;
+  }
+
+  .option-box {
+    flex-direction: row;
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .option-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .option-box h5 {
+    font-size: 0.95rem;
+  }
+
+  .option-box p {
+    font-size: 0.8rem;
+  }
+
+  .profile-badge {
+    margin-top:5%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    
+  }
+
+  .profile-info p {
+    
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}

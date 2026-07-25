@@ -1,0 +1,26 @@
+.admin-logo {
+  width: 80px;
+  height: 80px;
+  margin-left:-10px;
+  transition: width 0.3s, height 0.3s; /* smooth resizing */
+}
+
+/* Small screens */
+@media (max-width: 767px) {
+  .admin-logo {
+    width: 80px;
+    height: 80px;
+    margin-top: -10px;
+    margin-left:-10px;
+  }
+}
+
+/* Optional: Medium screens */
+@media (min-width: 768px) and (max-width: 991px) {
+  .admin-logo {
+     width: 80px;
+    height: 80px;
+    margin-top: -10px;
+    margin-left:-10px;
+  }
+}

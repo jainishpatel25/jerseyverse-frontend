@@ -1,0 +1,78 @@
+/* src/components/HeroBanner.css */
+.hero-banner {
+  position: relative;
+  height: 650px;
+   width: 99.5vw;
+  margin-left: calc(-50vw + 50%);
+  background: url('/public/MessiWorldCup.jpg') no-repeat center center/cover; 
+  overflow: hidden;
+}
+
+.hero-overlay {
+  background-color: rgba(0, 0, 0, 0.4); /* slight dark overlay for contrast */
+  height: 100%;
+  padding-left: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  background-size: cover;
+  z-index: 1;
+}
+
+.hero-content {
+  color: white;
+  margin-left: -2vw;
+  z-index: 2;
+}
+
+.hero-content p{
+  
+  width: 35%;
+}
+
+
+@media (max-width: 992px) {
+  .hero-content h1 {
+    font-size: 2rem; 
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+}
+
+
+@media (max-width: 576px) {
+  .hero-content h1 {
+    font-size: 1.5rem; 
+    margin-left: -12%;
+  }
+
+  .hero-content p {
+    font-size: 1.0rem;
+    margin-left: -12%;
+  }
+
+  .resbtn{
+    margin-left: -12%;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-content h1 {
+    font-size: 1.1rem;
+  }
+
+  .hero-content p {
+    font-size: 0.75rem;
+  }
+}
+

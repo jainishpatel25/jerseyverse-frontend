@@ -1,0 +1,17 @@
+.navbar {
+  height: 75px; /* fix navbar height */
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  height: 65px; /* try 45-55px */
+  width: auto;
+  object-fit: contain;
+  transform: scale(1.2); /* makes it look larger without stretching navbar */
+  transition: transform 0.2s ease-in-out;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.3); /* optional small hover effect */
+}
