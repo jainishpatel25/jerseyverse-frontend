@@ -1,35 +1,35 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { login } from '../redux/userSlice';
-import showToast from '../utils/showToast';
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/userSlice";
+import showToast from "../utils/showToast";
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const API= process.env.REACT_APP_API_URL;
-
+  const API = process.env.REACT_APP_API_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API}/api/users/login`, { email, password });
-
+      const res = await axios.post(`${API}/api/v1/auth/login`, {
+        email,
+        password,
+      });
       // Update redux + localStorage
       dispatch(login(res.data));
-      localStorage.setItem('userInfo', JSON.stringify(res.data));
 
-      showToast('Logged in successfully!', 'success');
-      navigate('/');
+      showToast("Logged in successfully!", "success");
+      navigate("/");
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed';
+      const msg = err.response?.data?.message || "Login failed";
       setError(msg);
-      showToast(msg, 'error');
+      showToast(msg, "error");
     }
   };
 
@@ -60,17 +60,15 @@ function LoginPage() {
           />
         </div>
         <p className="text-center mt-3">
-        Are you an admin? <a href="/admin/login">Login here</a>
+          Are you an admin? <a href="/admin/login">Login here</a>
         </p>
 
         <button className="btn btn-primary" type="submit">
           Login
         </button>
-
       </form>
     </div>
   );
 }
 
 export default LoginPage;
-

@@ -27,7 +27,6 @@ function Header() {
 
   const logoutHandler = () => {
     dispatch(logout());
-    localStorage.removeItem("userInfo");
     localStorage.removeItem("cart");
     showToast("Logged out successfully", "success");
     navigate("/");

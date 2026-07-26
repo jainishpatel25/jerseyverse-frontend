@@ -14,7 +14,7 @@ const JerseyDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(""); // ✅ new
+  const [selectedSize, setSelectedSize] = useState(""); 
   const dispatch = useDispatch();
 
 

@@ -4,7 +4,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import './styles/Productlist.css';
 import { FaArrowLeft, FaArrowRight, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { setSelectedProduct } from '../redux/productSlice';
@@ -15,16 +15,14 @@ const ProductCarouselSection = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const API= process.env.REACT_APP_API_URL;
-
 
   // Fetch real products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(`${API}/api/jerseys?limit=10`); // adjust endpoint if needed
-        console.log(res.data);
-        setProducts(res.data.jerseys); // show latest 10 products in carousel
+        const res = await api.get('/api/v1/products/latest'); // adjust endpoint if needed
+        console.log('latest products: ',res.data);
+        setProducts(res.data); // show latest 10 products in carousel
       } catch (err) {
         console.error('Failed to fetch products:', err);
       }
@@ -52,7 +50,7 @@ const ProductCarouselSection = () => {
 
   const handleSelect = (product) => {
     dispatch(setSelectedProduct(product));
-    navigate(`/product/${product._id}`);
+    navigate(`/product/${product.id}`);
   };
 
   return (
@@ -86,7 +84,7 @@ const ProductCarouselSection = () => {
           <div className="carousel-inner" ref={carouselRef}>
             {products?.map((item,index) => (
               <motion.div
-                key={item._id}
+                key={item.id}
                 className="product-card"
                 onClick={() => handleSelect(item)}
                 style={{ cursor: 'pointer' }}
@@ -96,7 +94,8 @@ const ProductCarouselSection = () => {
                 viewport={{ once: true }}
               >
                 <img
-                  src={`${API}/uploads/${item.image}`}
+                  // src={`${API}/uploads/${item.image}`}
+                  src={item.imageUrl}
                   alt={item.name}
                   className="product-image"
                 />
