@@ -1,42 +1,30 @@
 import { useState } from "react";
-import {
-  Form,
-  Button,
-  Alert,
-} from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 
 import api from "../../utils/api";
 
-const AddressAdd = ({ onSuccess }) => {
+const AddressAdd = ({ initialData, onSuccess }) => {
   const [formData, setFormData] = useState({
-    fullName: "",
-    phoneNumber: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    state: "",
-    country: "India",
-    postalCode: "",
-    isDefault: false,
+    fullName: initialData?.fullName || "",
+    phoneNumber: initialData?.phoneNumber || "",
+    addressLine1: initialData?.addressLine1 || "",
+    addressLine2: initialData?.addressLine2 || "",
+    city: initialData?.city || "",
+    state: initialData?.state || "",
+    country: initialData?.country || "India",
+    postalCode: initialData?.postalCode || "",
+    isDefault: initialData?.default || false,
   });
 
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
-    const {
-      name,
-      value,
-      type,
-      checked,
-    } = e.target;
+    const { name, value, type, checked } = e.target;
 
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -47,18 +35,15 @@ const AddressAdd = ({ onSuccess }) => {
       setError("");
       setSubmitting(true);
 
-      await api.post(
-        "/api/v1/addresses",
-        formData
-      );
+      if (initialData?.id) {
+        await api.put(`/api/v1/addresses/${initialData.id}`, formData);
+      } else {
+        await api.post("/api/v1/addresses", formData);
+      }
 
       onSuccess();
-
     } catch (err) {
-      console.error(
-        "Failed to save address:",
-        err
-      );
+      console.error("Failed to save address:", err);
 
       const errorData = err.response?.data;
       const fieldErrors = errorData?.errors;
@@ -68,11 +53,8 @@ const AddressAdd = ({ onSuccess }) => {
         : null;
 
       setError(
-        firstFieldError ||
-        errorData?.message ||
-        "Failed to save address"
+        firstFieldError || errorData?.message || "Failed to save address",
       );
-
     } finally {
       setSubmitting(false);
     }
@@ -80,12 +62,7 @@ const AddressAdd = ({ onSuccess }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-
-      {error && (
-        <Alert variant="danger">
-          {error}
-        </Alert>
-      )}
+      {error && <Alert variant="danger">{error}</Alert>}
 
       <Form.Group className="mb-2">
         <Form.Label>Full Name</Form.Label>
@@ -183,16 +160,13 @@ const AddressAdd = ({ onSuccess }) => {
         className="mb-3"
       />
 
-      <Button
-        type="submit"
-        variant="dark"
-        disabled={submitting}
-      >
+      <Button type="submit" variant="dark" disabled={submitting}>
         {submitting
           ? "Saving..."
-          : "Save Address"}
+          : initialData
+            ? "Update Address"
+            : "Save Address"}
       </Button>
-
     </Form>
   );
 };
