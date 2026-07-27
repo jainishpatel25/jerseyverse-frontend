@@ -1,57 +1,79 @@
 // ConnectionSecurity.js
-import React, { useState } from 'react';
-import { Form, Button, Container, Row, Col, Breadcrumb,Card } from 'react-bootstrap';
-import axios from 'axios';
+import React, { useState } from "react";
+import {
+  Form,
+  Button,
+  Container,
+  Row,
+  Col,
+  Breadcrumb,
+  Card,
+} from "react-bootstrap";
+import api from "../../utils/api";
 
 const Security = () => {
   const [formData, setFormData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
-
-  const API= process.env.REACT_APP_API_URL;
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (formData.newPassword !== formData.confirmPassword) {
-    return alert("New passwords do not match");
-  }
+    if (formData.newPassword !== formData.confirmPassword) {
+      alert("New passwords do not match");
+      return;
+    }
 
-  try {
-    const user = JSON.parse(localStorage.getItem("userInfo"));
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        'Content-Type': 'application/json',
-      },
-    };
+    try {
+      const requestData = {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword,
+      };
 
-    const { data } = await axios.put(`${API}/api/users/update-password`, {
-      currentPassword: formData.currentPassword,
-      newPassword: formData.newPassword,
-    }, config);
+      await api.put("/api/v1/users/change-password", requestData);
 
-    alert(data.message || 'Password updated');
-  } catch (error) {
-    alert(error.response?.data?.message || 'Error updating password');
-  }
-};
+      alert("Password updated successfully");
 
+      setFormData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      const errorData = error.response?.data;
+      const fieldErrors = errorData?.errors;
+
+      const firstFieldError = fieldErrors
+        ? Object.values(fieldErrors)[0]
+        : null;
+
+      alert(firstFieldError || errorData?.message || "Error updating password");
+    }
+  };
 
   return (
     <Container className="py-4">
-       <Breadcrumb>
-        <Breadcrumb.Item href="#"><i className="bi bi-house-door"></i></Breadcrumb.Item>
+      <Breadcrumb>
+        <Breadcrumb.Item href="#">
+          <i className="bi bi-house-door"></i>
+        </Breadcrumb.Item>
         <Breadcrumb.Item active>Connection & Security</Breadcrumb.Item>
       </Breadcrumb>
-       <hr className="ms-2" style={{ width: '610px', height: '0px', backgroundColor: '#A9A9A9', opacity: 1 }} />
+      <hr
+        className="ms-2"
+        style={{
+          width: "610px",
+          height: "0px",
+          backgroundColor: "#A9A9A9",
+          opacity: 1,
+        }}
+      />
       <Row className="justify-content-start">
         <Col md={6}>
           <h4 className="mb-4 fw-semibold">Change Password</h4>
@@ -93,7 +115,11 @@ const Security = () => {
                 />
               </Form.Group>
 
-              <Button variant="dark" type="submit" className="w-50 rounded-pill mb-3">
+              <Button
+                variant="dark"
+                type="submit"
+                className="w-50 rounded-pill mb-3"
+              >
                 Update Password
               </Button>
             </Form>

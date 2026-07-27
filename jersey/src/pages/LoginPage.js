@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/userSlice";
 import showToast from "../utils/showToast";
+import api from "../utils/api";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -17,12 +18,25 @@ function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API}/api/v1/auth/login`, {
+      const loginRes = await api.post("/api/v1/auth/login", {
         email,
         password,
       });
-      // Update redux + localStorage
-      dispatch(login(res.data));
+
+      // Temporarily store token so api.js can use it
+      localStorage.setItem("userInfo", JSON.stringify(loginRes.data));
+
+      // Fetch the logged-in customer's profile
+      const profileRes = await api.get("/api/v1/users/me");
+
+      // Combine authentication + profile information
+      const userInfo = {
+        ...loginRes.data,
+        ...profileRes.data,
+      };
+
+      // Store complete user information in Redux + localStorage
+      dispatch(login(userInfo));
 
       showToast("Logged in successfully!", "success");
       navigate("/");

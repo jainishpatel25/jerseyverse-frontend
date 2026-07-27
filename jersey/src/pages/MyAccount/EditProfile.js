@@ -1,40 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, Card, Row, Col, Alert, Spinner } from 'react-bootstrap';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Form,
+  Button,
+  Card,
+  Row,
+  Col,
+  Alert,
+  Spinner,
+} from "react-bootstrap";
+import api from "../../utils/api";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { updateUserProfile } from "../../redux/userSlice";
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: ''
+    name: "",
+    email: "",
+    phoneNumber: "",
   });
 
   const [loading, setLoading] = useState(true);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
 
-  const API= process.env.REACT_APP_API_URL;
-
+  const API = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem('userInfo'));
-        if (!user) throw new Error('User not logged in');
-
-        const { data } = await axios.get(`${API}/api/users/profile`, {
-          headers: { Authorization: `Bearer ${user.token}` }
-        });
+        const { data } = await api.get("/api/v1/users/me");
 
         setFormData({
-          name: data.name || '',
-          email: data.email || '',
-          phone: data.phone || ''
+          name: data.name || "",
+          email: data.email || "",
+          phoneNumber: data.phoneNumber || "",
         });
-
       } catch (err) {
-        console.error(err);
-        setError('Failed to load profile');
+        console.error("Failed to load profile:", err);
+
+        setError(err.response?.data?.message || "Failed to load profile");
       } finally {
         setLoading(false);
       }
@@ -51,32 +58,40 @@ const EditProfile = () => {
     e.preventDefault();
 
     try {
-      setError('');
-      setSuccessMessage('');
-      const user = JSON.parse(localStorage.getItem('userInfo'));
-      if (!user) throw new Error('User not logged in');
+      setError("");
+      setSuccessMessage("");
 
-      await axios.put(
-        `${API}/api/users/profile`,
-        formData,
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      );
+      const updateData = {
+        name: formData.name,
+        phoneNumber: formData.phoneNumber,
+      };
 
-      setSuccessMessage('Profile updated successfully!');
+      const { data } = await api.put("/api/v1/users/me", updateData);
 
+      dispatch(updateUserProfile(data));
+
+      setFormData({
+        name: data.name || "",
+        email: data.email || "",
+        phoneNumber: data.phoneNumber || "",
+      });
+
+      setSuccessMessage("Profile updated successfully!");
     } catch (err) {
-      console.error(err);
-      setError('Failed to update profile');
+      console.error("Failed to update profile:", err);
+
+      const errorData = err.response?.data;
+      const fieldErrors = errorData?.errors;
+
+      const firstFieldError = fieldErrors
+        ? Object.values(fieldErrors)[0]
+        : null;
+
+      setError(
+        firstFieldError || errorData?.message || "Failed to update profile",
+      );
     }
   };
-
-  if (loading) {
-    return (
-      <Container className="py-5 text-center">
-        <Spinner animation="border" />
-      </Container>
-    );
-  }
 
   return (
     <Container className="py-5">
@@ -87,7 +102,9 @@ const EditProfile = () => {
               <h3 className="mb-4 text-center fw-bold">Edit Profile</h3>
 
               {error && <Alert variant="danger">{error}</Alert>}
-              {successMessage && <Alert variant="success">{successMessage}</Alert>}
+              {successMessage && (
+                <Alert variant="success">{successMessage}</Alert>
+              )}
 
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="name" className="mb-3">
@@ -121,8 +138,8 @@ const EditProfile = () => {
                   <Form.Label>Phone Number</Form.Label>
                   <Form.Control
                     type="text"
-                    name="phone"
-                    value={formData.phone}
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
                     onChange={handleChange}
                     required
                     placeholder="Enter your phone number"

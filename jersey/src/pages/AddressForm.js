@@ -3,19 +3,7 @@ import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
 const AddressForm = ({ onConfirm }) => {
-  // const [formData, setFormData] = useState({
-  //   name: '',
-  //   email: '',
-  //   phone: '',
-  //   company: '',
-  //   vat: '',
-  //   street: '',
-  //   apartment: '',
-  //   city: '',
-  //   zip: '',
-  //   country: 'India',
-  //   state: 'Gujarat',
-  // });
+  
 
 
   const savedAddress = JSON.parse(localStorage.getItem('userAddress')) || {};
