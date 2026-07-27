@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   Container,
   Row,
@@ -15,8 +14,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setSelectedProduct } from "../redux/productSlice";
 
+import api from "../utils/api";
+
 const Shop = () => {
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [jerseys, setJerseys] = useState([]);
@@ -27,51 +27,90 @@ const Shop = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [priceRange, setPriceRange] = useState({ min: 500, max: 2500 });
-
+  const [priceRange, setPriceRange] = useState({
+    min: 0,
+    max: 0,
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const API= process.env.REACT_APP_API_URL;
+  const API = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchJerseys = async () => {
       try {
-        const res = await axios.get(`${API}/api/jerseys`);
-        setProducts(res.data);
+        setLoading(true);
+        setError(null);
+
+        const params = {
+          page: page - 1,
+          size: 5,
+        };
+
+        if (searchTerm.trim()) {
+          params.search = searchTerm.trim();
+        }
+
+        if (minPrice !== "") {
+          params.minPrice = minPrice;
+        }
+
+        if (maxPrice !== "") {
+          params.maxPrice = maxPrice;
+        }
+
+        if (sortOrder) {
+          params.sort = sortOrder;
+        }
+
+        const res = await api.get("/api/v1/products", {
+          params,
+        });
+
+        setJerseys(res.data.content || []);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
-        setError("Failed to fetch jerseys");
+        console.error("Failed to fetch products:", err);
+        setError(err.response?.data?.message || "Failed to fetch products");
       } finally {
         setLoading(false);
       }
     };
 
     fetchJerseys();
+  }, [searchTerm, minPrice, maxPrice, sortOrder, page]);
+  useEffect(() => {
+    const fetchPriceRange = async () => {
+      try {
+        const res = await api.get("/api/v1/products/price-range");
+
+        const min = res.data.minPrice;
+        const max = res.data.maxPrice;
+
+        setPriceRange({
+          min,
+          max,
+        });
+
+        setMinPrice(min);
+        setMaxPrice(max);
+      } catch (err) {
+        console.error("Failed to fetch price range:", err);
+      }
+    };
+
+    fetchPriceRange();
   }, []);
 
-  useEffect(() => {
-    const fetchJerseys = async () => {
-      try {
-        const query = `?search=${searchTerm}&min=${minPrice}&max=${maxPrice}&sort=${sortOrder}&page=${page}&limit=5`;
-        const res = await axios.get(
-          `${API}/api/jerseys${query}`
-        );
-        setJerseys(res.data.jerseys || []);
-        setTotalPages(res.data.totalPages);
-  
-    setPriceRange((prev) => {
-        if (prev.min === 500 && prev.max === 2500) {
-          return { min: res.data.minPrice, max: res.data.maxPrice };
-        }
-        return prev;
-      });
-    } catch (err) {
-      console.error("Failed to fetch jerseys:", err);
-    }
-  };
+  const getProductImageUrl = (imageUrl) => {
+    if (!imageUrl) return "";
 
-    fetchJerseys();
-  }, [searchTerm, minPrice, maxPrice, sortOrder, page]);
+    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      return imageUrl;
+    }
+
+    return `${API}${imageUrl}`;
+  };
 
   return (
     <Container fluid className="p-0 m-0">
@@ -84,12 +123,26 @@ const Shop = () => {
               <span>₹ {priceRange.min}</span>
               <span>₹ {maxPrice}</span>
             </div>
+            {/* <input
+              type="range"
+              min={priceRange.min}
+              max={priceRange.max}
+              value={minPrice}
+              onChange={(e) => {
+                setMinPrice(Number(e.target.value));
+                setPage(1);
+              }}
+              className="form-range"
+            /> */}
             <input
               type="range"
               min={priceRange.min}
               max={priceRange.max}
               value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              onChange={(e) => {
+                setMaxPrice(Number(e.target.value));
+                setPage(1);
+              }}
               className="form-range"
             />
           </div>
@@ -113,12 +166,17 @@ const Shop = () => {
               <Form.Select
                 size="sm mt-3"
                 value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
+                onChange={(e) => {
+                  setSortOrder(e.target.value);
+                  setPage(1);
+                }}
                 style={{ width: "150px" }}
               >
                 <option value="">Featured</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
+                <option value="price,asc">Price: Low to High</option>
+                <option value="price,desc">Price: High to Low</option>
+                <option value="name,asc">Name: A to Z</option>
+                <option value="name,desc">Name: Z to A</option>
               </Form.Select>
             </div>
           </div>
@@ -132,23 +190,23 @@ const Shop = () => {
           ) : (
             <Row className="g-4">
               {jerseys?.map((product) => (
-                <Col key={product._id} md={3} sm={6} xs={12}>
+                <Col key={product.id} md={3} sm={6} xs={12}>
                   <div
                     className="product-box"
                     onClick={() => {
                       dispatch(setSelectedProduct(product));
-                      navigate(`/product/${product._id}`);
+                      navigate(`/product/${product.id}`);
                     }}
                     style={{ cursor: "pointer" }}
                   >
                     {/* <img src={`http://localhost:5000/uploads/${product.image}`} alt={product.name} className="product-img" /> */}
                     <div className="position-relative">
                       <img
-                        src={`${API}/uploads/${product.image}`}
+                        src={getProductImageUrl(product.imageUrl)}
                         alt={product.name}
                         className="product-img"
                       />
-                      {product.countInStock === 0 && (
+                      {product.stockStatus === "OUT_OF_STOCK" && (
                         <span
                           className="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 small"
                           style={{ borderRadius: "0 0.5rem 0.5rem 0" }}

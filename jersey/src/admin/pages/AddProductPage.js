@@ -48,7 +48,7 @@ const AddProductPage = () => {
     form.append("name", formData.name);
     form.append("price", formData.price);
     form.append("image", formData.image);
-    form.append('sizes', JSON.stringify(formData.sizes)); // ✅ send sizes as JSON string
+    form.append("sizes", JSON.stringify(formData.sizes)); // ✅ send sizes as JSON string
 
     try {
       const res = await fetch("/admin/products/add", {
@@ -72,80 +72,80 @@ const AddProductPage = () => {
 
   return (
     <div className="admin-content">
-    <Container className="p-4">
-      <h4 className="mb-4">Add New Product</h4>
-      <Card className="shadow-sm p-4">
-        <Form onSubmit={handleSubmit} encType="multipart/form-data">
-          <Form.Group className="mb-3">
-            <Form.Label>Product Name</Form.Label>
-            <Form.Control
-              type="text"
-              name="name"
-              placeholder="Enter jersey name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+      <Container className="p-4">
+        <h4 className="mb-4">Add New Product</h4>
+        <Card className="shadow-sm p-4">
+          <Form onSubmit={handleSubmit} encType="multipart/form-data">
+            <Form.Group className="mb-3">
+              <Form.Label>Product Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                placeholder="Enter jersey name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Price (₹)</Form.Label>
-            <Form.Control
-              type="number"
-              name="price"
-              placeholder="Enter price"
-              value={formData.price}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Price (₹)</Form.Label>
+              <Form.Control
+                type="number"
+                name="price"
+                placeholder="Enter price"
+                value={formData.price}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Product Image</Form.Label>
-            <Form.Control
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleChange}
-            />
-          </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Product Image</Form.Label>
+              <Form.Control
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Available Sizes</Form.Label>
-            <div className="d-flex flex-wrap gap-2">
-              {sizeOptions.map((size) => (
-                <Form.Check
-                  key={size}
-                  type="checkbox"
-                  label={size}
-                  checked={formData.sizes.includes(size)}
-                  onChange={() => handleSizeChange(size)}
-                />
-              ))}
-            </div>
-          </Form.Group>
-
-          {preview && (
-            <div className="mb-4">
-              <Form.Label>Preview:</Form.Label>
-              <div>
-                <Image
-                  src={preview}
-                  alt="Preview"
-                  width={150}
-                  height={150}
-                  thumbnail
-                />
+            <Form.Group className="mb-3">
+              <Form.Label>Available Sizes</Form.Label>
+              <div className="d-flex flex-wrap gap-2">
+                {sizeOptions.map((size) => (
+                  <Form.Check
+                    key={size}
+                    type="checkbox"
+                    label={size}
+                    checked={formData.sizes.includes(size)}
+                    onChange={() => handleSizeChange(size)}
+                  />
+                ))}
               </div>
-            </div>
-          )}
+            </Form.Group>
 
-          <Button type="submit" variant="primary">
-            Add Product
-          </Button>
-        </Form>
-      </Card>
-    </Container>
+            {preview && (
+              <div className="mb-4">
+                <Form.Label>Preview:</Form.Label>
+                <div>
+                  <Image
+                    src={preview}
+                    alt="Preview"
+                    width={150}
+                    height={150}
+                    thumbnail
+                  />
+                </div>
+              </div>
+            )}
+
+            <Button type="submit" variant="primary">
+              Add Product
+            </Button>
+          </Form>
+        </Card>
+      </Container>
     </div>
   );
 };

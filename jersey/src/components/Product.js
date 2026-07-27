@@ -15,6 +15,7 @@ const ProductCarouselSection = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const API = process.env.REACT_APP_API_URL;
 
   // Fetch real products from backend
   useEffect(() => {
@@ -94,8 +95,8 @@ const ProductCarouselSection = () => {
                 viewport={{ once: true }}
               >
                 <img
-                  // src={`${API}/uploads/${item.image}`}
-                  src={item.imageUrl}
+                  // src={`${API}/uploads/${item.image}`}  //node backend
+                  src={`${API}${item.imageUrl}`} //java backend
                   alt={item.name}
                   className="product-image"
                 />

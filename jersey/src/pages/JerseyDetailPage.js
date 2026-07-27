@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import "../components/styles/JerseyDetailPage.css";
+import api from "../utils/api";
 
 const JerseyDetailPage = () => {
   const { id } = useParams();
@@ -14,13 +15,10 @@ const JerseyDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(""); 
+  const [selectedSize, setSelectedSize] = useState("");
   const dispatch = useDispatch();
 
-
-
-  const API= process.env.REACT_APP_API_URL;
-
+  const API = process.env.REACT_APP_API_URL;
 
   const handleDecrease = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -31,7 +29,7 @@ const JerseyDetailPage = () => {
   };
 
   const handleAddToCart = () => {
-    if (!selectedSize && product.sizes?.length > 0) {
+    if (!selectedSize && product.availableSizes?.length > 0) {
       alert("Please select a size before adding to cart.");
       return;
     }
@@ -40,7 +38,7 @@ const JerseyDetailPage = () => {
   };
 
   const handleBuyNow = () => {
-    if (!selectedSize && product.sizes?.length > 0) {
+    if (!selectedSize && product.availableSizes?.length > 0) {
       alert("Please select a size before proceeding.");
       return;
     }
@@ -52,11 +50,18 @@ const JerseyDetailPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`${API}/api/jerseys/${id}`);
+        setLoading(true);
+        setError("");
+
+        const res = await api.get(`/api/v1/products/${id}`);
+
+        console.log("Product detail:", res.data);
         setProduct(res.data);
-        setLoading(false);
       } catch (err) {
-        setError("Product not found");
+        console.error("Failed to fetch product:", err);
+
+        setError(err.response?.data?.message || "Product not found");
+      } finally {
         setLoading(false);
       }
     };
@@ -93,7 +98,7 @@ const JerseyDetailPage = () => {
         {/* Left: Product Image */}
         <Col md={6} className="text-center">
           <img
-            src={`${API}/uploads/${product.image}`}
+            src={`${API}${product.imageUrl}`}
             alt={product.name}
             className="img-fluid"
             style={{ maxHeight: "500px", objectFit: "contain" }}
@@ -116,16 +121,16 @@ const JerseyDetailPage = () => {
           </h4>
 
           {/* ✅ Size Selector */}
-          {product.sizes && product.sizes.length > 0 && (
+          {product.availableSizes && product.availableSizes.length > 0 && (
             <div className="mb-3">
               <div className="d-flex flex-wrap gap-2">
-                {product.sizes.map((size) => (
+                {product.availableSizes.map((availableSizes) => (
                   <button
-                    key={size}
+                    key={availableSizes.size}
                     type="button"
-                    onClick={() => setSelectedSize(size)}
+                    onClick={() => setSelectedSize(availableSizes.size)}
                     className={`border rounded-circle px-3 py-2 ${
-                      selectedSize === size
+                      selectedSize === availableSizes.size
                         ? "bg-dark text-white"
                         : "bg-light text-dark"
                     }`}
@@ -135,17 +140,17 @@ const JerseyDetailPage = () => {
                       cursor: "pointer",
                     }}
                     onMouseEnter={(e) => {
-                      if (selectedSize !== size) {
+                      if (selectedSize !== availableSizes.size) {
                         e.target.style.backgroundColor = "#e9ecef";
                       }
                     }}
                     onMouseLeave={(e) => {
-                      if (selectedSize !== size) {
+                      if (selectedSize !== availableSizes.size) {
                         e.target.style.backgroundColor = "#f8f9fa";
                       }
                     }}
                   >
-                    {size}
+                    {availableSizes.size}
                   </button>
                 ))}
               </div>
@@ -171,7 +176,7 @@ const JerseyDetailPage = () => {
 
           {/* Cart / Buy Buttons */}
           <div className="d-flex flex-wrap gap-2 mb-3">
-            {product.countInStock === 0 ? (
+            {product.stockStatus === "OUT_OF_STOCK" ? (
               <span className="text-danger fw-bold">Out of Stock</span>
             ) : (
               <>
