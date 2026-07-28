@@ -163,7 +163,7 @@ const AddressAdd = ({ initialData, onSuccess }) => {
       <Button type="submit" variant="dark" disabled={submitting}>
         {submitting
           ? "Saving..."
-          : initialData
+          : initialData?.id
             ? "Update Address"
             : "Save Address"}
       </Button>
