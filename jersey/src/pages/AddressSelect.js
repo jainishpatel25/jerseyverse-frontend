@@ -7,10 +7,6 @@
 // import { Modal } from 'react-bootstrap';
 // import AddressAdd from './MyAccount/AddressAdd';
 
-
-
-
-
 // const AddressSelect = () => {
 //   const [showForm, setShowForm] = useState(false);
 //   const [address, setAddress] = useState(null);
@@ -19,7 +15,7 @@
 //   const navigate = useNavigate();
 
 //   const { coupon, discount } = useSelector((state) => state.coupon);
-//   const cartItems = useSelector((state) => state.cart); 
+//   const cartItems = useSelector((state) => state.cart);
 //   const subtotal = cartItems.reduce((sum, item) => {
 //   const price = typeof item.price === 'number' ? item.price : Number(item.price);
 //   const qty = typeof item.qty === 'number' ? item.qty : Number(item.qty);
@@ -32,12 +28,11 @@
 //   const total = subtotal + tax - discount;
 //   const API= process.env.REACT_APP_API_URL;
 
-
 //   useEffect(() => {
 //   const fetchAddress = async () => {
 //     try {
 //       const user = JSON.parse(localStorage.getItem('userInfo'));
-      
+
 //       if (!user || !user.token) return;
 
 //       const config = {
@@ -69,7 +64,6 @@
 //  const handleEdit = () => {
 //   setShowForm(true);
 // };
- 
 
 //   if (!address) return null;
 
@@ -264,10 +258,7 @@ const AddressSelect = () => {
 
   const cartItems = cart.items || [];
 
-  const totalItems = cartItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const subtotal = Number(cart.subtotal || 0);
   const discount = Number(cart.discount || 0);
@@ -288,7 +279,9 @@ const AddressSelect = () => {
 
       const fetchedAddresses = response.data || [];
 
-      setAddresses(fetchedAddresses);
+      const sortedAddresses = [...fetchedAddresses].sort((a, b) => a.id - b.id);
+
+      setAddresses(sortedAddresses);
 
       if (fetchedAddresses.length === 0) {
         setSelectedAddressId(null);
@@ -299,16 +292,14 @@ const AddressSelect = () => {
       if (
         preserveSelection &&
         selectedAddressId &&
-        fetchedAddresses.some(
-          (address) => address.id === selectedAddressId
-        )
+        fetchedAddresses.some((address) => address.id === selectedAddressId)
       ) {
         return;
       }
 
       // Otherwise select default address
       const defaultAddress = fetchedAddresses.find(
-        (address) => address.default
+        (address) => address.default,
       );
 
       if (defaultAddress) {
@@ -322,10 +313,7 @@ const AddressSelect = () => {
     } catch (err) {
       console.error("Failed to load checkout addresses:", err);
 
-      setError(
-        err.response?.data?.message ||
-          "Failed to load addresses."
-      );
+      setError(err.response?.data?.message || "Failed to load addresses.");
     } finally {
       setLoading(false);
     }
@@ -398,19 +386,14 @@ const AddressSelect = () => {
   return (
     <Container className="my-5">
       <h5 className="mb-4">
-        Order &gt;{" "}
-        <span className="fw-bold text-dark">Address</span>
+        Order &gt; <span className="fw-bold text-dark">Address</span>
         {" > "}
         <span className="text-muted">Payment</span>
       </h5>
 
       <h2 className="mb-4">Delivery address</h2>
 
-      {error && (
-        <Alert variant="danger">
-          {error}
-        </Alert>
-      )}
+      {error && <Alert variant="danger">{error}</Alert>}
 
       <Row>
         <Col md={8}>
@@ -419,9 +402,7 @@ const AddressSelect = () => {
           {loading ? (
             <div className="py-4 text-center">
               <Spinner animation="border" size="sm" />
-              <span className="ms-2">
-                Loading addresses...
-              </span>
+              <span className="ms-2">Loading addresses...</span>
             </div>
           ) : (
             <>
@@ -431,10 +412,7 @@ const AddressSelect = () => {
                     You don't have a saved delivery address yet.
                   </p>
 
-                  <Button
-                    variant="dark"
-                    onClick={handleAddAddress}
-                  >
+                  <Button variant="dark" onClick={handleAddAddress}>
                     <FaPlus className="me-2" />
                     Add Address
                   </Button>
@@ -450,57 +428,39 @@ const AddressSelect = () => {
                             : ""
                         }`}
                         style={{ cursor: "pointer" }}
-                        onClick={() =>
-                          setSelectedAddressId(address.id)
-                        }
+                        onClick={() => setSelectedAddressId(address.id)}
                       >
                         <div>
                           <div className="d-flex justify-content-between align-items-start mb-2">
                             <Form.Check
                               type="radio"
                               name="deliveryAddress"
-                              checked={
-                                selectedAddressId === address.id
-                              }
-                              onChange={() =>
-                                setSelectedAddressId(address.id)
-                              }
+                              checked={selectedAddressId === address.id}
+                              onChange={() => setSelectedAddressId(address.id)}
                             />
 
                             {address.default && (
-                              <span className="badge bg-dark">
-                                Default
-                              </span>
+                              <span className="badge bg-dark">Default</span>
                             )}
                           </div>
 
-                          <p className="fw-semibold mb-1">
-                            {address.fullName}
-                          </p>
+                          <p className="fw-semibold mb-1">{address.fullName}</p>
 
-                          <p className="mb-1">
-                            {address.addressLine1}
-                          </p>
+                          <p className="mb-1">{address.addressLine1}</p>
 
                           {address.addressLine2 && (
-                            <p className="mb-1">
-                              {address.addressLine2}
-                            </p>
+                            <p className="mb-1">{address.addressLine2}</p>
                           )}
 
                           <p className="mb-1">
-                            {address.city},{" "}
-                            {address.postalCode}
+                            {address.city}, {address.postalCode}
                           </p>
 
                           <p className="mb-1">
-                            {address.state},{" "}
-                            {address.country}
+                            {address.state}, {address.country}
                           </p>
 
-                          <p className="mb-0">
-                            {address.phoneNumber}
-                          </p>
+                          <p className="mb-0">{address.phoneNumber}</p>
                         </div>
 
                         <div className="d-flex justify-content-end mt-3">
@@ -532,14 +492,9 @@ const AddressSelect = () => {
                       }}
                       onClick={handleAddAddress}
                     >
-                      <FaPlus
-                        size={28}
-                        className="text-muted mb-2"
-                      />
+                      <FaPlus size={28} className="text-muted mb-2" />
 
-                      <p className="mb-0 text-muted">
-                        Add Address
-                      </p>
+                      <p className="mb-0 text-muted">Add Address</p>
                     </div>
                   </Col>
                 </Row>
@@ -558,9 +513,7 @@ const AddressSelect = () => {
                       name="delivery"
                       id="standard"
                       value="standard"
-                      onChange={() =>
-                        setDelivery("standard")
-                      }
+                      onChange={() => setDelivery("standard")}
                       checked={delivery === "standard"}
                     />
 
@@ -574,9 +527,7 @@ const AddressSelect = () => {
                       name="delivery"
                       id="express"
                       value="express"
-                      onChange={() =>
-                        setDelivery("express")
-                      }
+                      onChange={() => setDelivery("express")}
                       checked={delivery === "express"}
                     />
 
@@ -594,9 +545,7 @@ const AddressSelect = () => {
                   type="switch"
                   label="Same as delivery address"
                   checked={sameBilling}
-                  onChange={() =>
-                    setSameBilling((prev) => !prev)
-                  }
+                  onChange={() => setSameBilling((prev) => !prev)}
                 />
               </div>
             </>
@@ -607,9 +556,7 @@ const AddressSelect = () => {
 
         <Col md={4}>
           <div className="border rounded p-4 shadow-sm">
-            <h6 className="fw-bold mb-3">
-              Order summary
-            </h6>
+            <h6 className="fw-bold mb-3">Order summary</h6>
 
             <div className="d-flex justify-content-between mb-2">
               <span>
@@ -617,70 +564,51 @@ const AddressSelect = () => {
                 {totalItems !== 1 ? "s" : ""})
               </span>
 
-              <span>
-                ₹ {subtotal.toLocaleString("en-IN")}
-              </span>
+              <span>₹ {subtotal.toLocaleString("en-IN")}</span>
             </div>
 
             <div className="d-flex justify-content-between mb-2">
               <span>Delivery</span>
 
-              <span>
-                ₹ {deliveryCharge.toLocaleString("en-IN")}
-              </span>
+              <span>₹ {deliveryCharge.toLocaleString("en-IN")}</span>
             </div>
 
             <div className="d-flex justify-content-between mb-2">
               <span>Subtotal</span>
 
-              <span>
-                ₹ {subtotal.toLocaleString("en-IN")}
-              </span>
+              <span>₹ {subtotal.toLocaleString("en-IN")}</span>
             </div>
 
             <div className="d-flex justify-content-between mb-3 border-bottom pb-2">
               <span>Taxes</span>
 
-              <span>
-                ₹ {tax.toLocaleString("en-IN")}
-              </span>
+              <span>₹ {tax.toLocaleString("en-IN")}</span>
             </div>
 
             {cart.appliedCouponCode && discount > 0 && (
               <div className="d-flex justify-content-between text-success mb-2">
-                <span>
-                  Coupon ({cart.appliedCouponCode})
-                </span>
+                <span>Coupon ({cart.appliedCouponCode})</span>
 
-                <span>
-                  - ₹ {discount.toLocaleString("en-IN")}
-                </span>
+                <span>- ₹ {discount.toLocaleString("en-IN")}</span>
               </div>
             )}
 
             <div className="d-flex justify-content-between fw-bold mb-3">
               <span>Total</span>
 
-              <span>
-                ₹ {total.toLocaleString("en-IN")}
-              </span>
+              <span>₹ {total.toLocaleString("en-IN")}</span>
             </div>
 
             <Button
               variant="dark"
               className="w-100 mb-3"
               onClick={handleConfirm}
-              disabled={
-                loading ||
-                addresses.length === 0
-              }
+              disabled={loading || addresses.length === 0}
             >
               Confirm &nbsp; →
             </Button>
 
-            <div className="text-center text-muted">
-              or
-            </div>
+            <div className="text-center text-muted">or</div>
 
             <div
               className="text-center mt-2 text-dark"
@@ -695,16 +623,10 @@ const AddressSelect = () => {
 
       {/* ADD / EDIT ADDRESS MODAL */}
 
-      <Modal
-        show={showForm}
-        onHide={handleFormClose}
-        centered
-      >
+      <Modal show={showForm} onHide={handleFormClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-            {editingAddress
-              ? "Edit Address"
-              : "Add Address"}
+            {editingAddress ? "Edit Address" : "Add Address"}
           </Modal.Title>
         </Modal.Header>
 

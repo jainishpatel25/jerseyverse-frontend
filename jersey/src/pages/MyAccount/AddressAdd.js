@@ -35,10 +35,28 @@ const AddressAdd = ({ initialData, onSuccess }) => {
       setError("");
       setSubmitting(true);
 
+      let savedAddress;
+
+      // EDIT existing address
       if (initialData?.id) {
-        await api.put(`/api/v1/addresses/${initialData.id}`, formData);
-      } else {
-        await api.post("/api/v1/addresses", formData);
+        const response = await api.put(
+          `/api/v1/addresses/${initialData.id}`,
+          formData,
+        );
+
+        savedAddress = response.data;
+      }
+
+      // ADD new address
+      else {
+        const response = await api.post("/api/v1/addresses", formData);
+
+        savedAddress = response.data;
+      }
+
+      // Set this address as default using the dedicated backend endpoint
+      if (formData.isDefault && savedAddress?.id) {
+        await api.patch(`/api/v1/addresses/${savedAddress.id}/default`);
       }
 
       onSuccess();
