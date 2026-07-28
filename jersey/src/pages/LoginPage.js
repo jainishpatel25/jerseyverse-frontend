@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/userSlice";
 import showToast from "../utils/showToast";
 import api from "../utils/api";
+import { setCart } from "../redux/cartSlice";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -37,6 +38,10 @@ function LoginPage() {
 
       // Store complete user information in Redux + localStorage
       dispatch(login(userInfo));
+
+      // Load the logged-in customer's persistent cart immediately
+      const cartRes = await api.get("/api/v1/cart");
+      dispatch(setCart(cartRes.data));
 
       showToast("Logged in successfully!", "success");
       navigate("/");

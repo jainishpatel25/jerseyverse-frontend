@@ -5,6 +5,8 @@ import showToast from "../utils/showToast";
 import SearchModal from "../utils/SearchModal";
 import "./styles/serachmodal.css";
 
+import { resetCart } from "../redux/cartSlice";
+
 import {
   Navbar,
   Nav,
@@ -23,11 +25,16 @@ function Header() {
 
   const user = useSelector((state) => state.user.user);
   const cart = useSelector((state) => state.cart);
-  const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+
+  const totalQty = (cart.items || []).reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
 
   const logoutHandler = () => {
     dispatch(logout());
-    localStorage.removeItem("cart");
+    dispatch(resetCart());
+
     showToast("Logged out successfully", "success");
     navigate("/");
   };

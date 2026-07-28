@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import "../components/styles/JerseyDetailPage.css";
 import api from "../utils/api";
+import { setCart } from "../redux/cartSlice";
 
 const JerseyDetailPage = () => {
   const { id } = useParams();
@@ -16,6 +17,7 @@ const JerseyDetailPage = () => {
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
+  const [selectedVariantId, setSelectedVariantId] = useState(null);
   const dispatch = useDispatch();
 
   const API = process.env.REACT_APP_API_URL;
@@ -28,23 +30,50 @@ const JerseyDetailPage = () => {
     setQuantity((prev) => prev + 1);
   };
 
-  const handleAddToCart = () => {
-    if (!selectedSize && product.availableSizes?.length > 0) {
+  const handleAddToCart = async () => {
+    if (!selectedVariantId) {
       alert("Please select a size before adding to cart.");
       return;
     }
-    const productWithQty = { ...product, qty: quantity, size: selectedSize };
-    dispatch(addToCart(productWithQty));
+
+    try {
+      const response = await api.post("/api/v1/cart/items", {
+        productVariantId: selectedVariantId,
+        quantity: quantity,
+      });
+
+      dispatch(setCart(response.data));
+
+      console.log("Cart after adding item:", response.data);
+
+      alert("Product added to cart successfully!");
+    } catch (error) {
+      console.error("Failed to add product to cart:", error);
+
+      alert(error.response?.data?.message || "Failed to add product to cart");
+    }
   };
 
-  const handleBuyNow = () => {
-    if (!selectedSize && product.availableSizes?.length > 0) {
+  const handleBuyNow = async () => {
+    if (!selectedVariantId) {
       alert("Please select a size before proceeding.");
       return;
     }
-    const productWithQty = { ...product, qty: quantity, size: selectedSize };
-    dispatch(addToCart(productWithQty));
-    navigate("/cart");
+
+    try {
+      const response = await api.post("/api/v1/cart/items", {
+        productVariantId: selectedVariantId,
+        quantity: quantity,
+      });
+
+      dispatch(setCart(response.data));
+
+      navigate("/cart");
+    } catch (error) {
+      console.error("Failed to add product to cart:", error);
+
+      alert(error.response?.data?.message || "Failed to add product to cart");
+    }
   };
 
   useEffect(() => {
@@ -124,13 +153,16 @@ const JerseyDetailPage = () => {
           {product.availableSizes && product.availableSizes.length > 0 && (
             <div className="mb-3">
               <div className="d-flex flex-wrap gap-2">
-                {product.availableSizes.map((availableSizes) => (
+                {product.availableSizes.map((variant) => (
                   <button
-                    key={availableSizes.size}
+                    key={variant.productVariantId}
                     type="button"
-                    onClick={() => setSelectedSize(availableSizes.size)}
+                    onClick={() => {
+                      setSelectedSize(variant.size);
+                      setSelectedVariantId(variant.productVariantId);
+                    }}
                     className={`border rounded-circle px-3 py-2 ${
-                      selectedSize === availableSizes.size
+                      selectedSize === variant.size
                         ? "bg-dark text-white"
                         : "bg-light text-dark"
                     }`}
@@ -139,18 +171,8 @@ const JerseyDetailPage = () => {
                       transition: "0.2s",
                       cursor: "pointer",
                     }}
-                    onMouseEnter={(e) => {
-                      if (selectedSize !== availableSizes.size) {
-                        e.target.style.backgroundColor = "#e9ecef";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (selectedSize !== availableSizes.size) {
-                        e.target.style.backgroundColor = "#f8f9fa";
-                      }
-                    }}
                   >
-                    {availableSizes.size}
+                    {variant.size}
                   </button>
                 ))}
               </div>
