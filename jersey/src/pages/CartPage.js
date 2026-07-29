@@ -15,6 +15,9 @@ const CartPage = () => {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
 
   // Get cart from Spring Boot
   useEffect(() => {
@@ -123,6 +126,55 @@ const CartPage = () => {
         err.response?.data?.message ||
           "Cart validation failed. Please review your cart.",
       );
+    }
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError("Please enter a coupon code.");
+      return;
+    }
+
+    try {
+      setCouponLoading(true);
+      setCouponError("");
+
+      const response = await api.post("/api/v1/coupons/apply", {
+        couponCode: couponCode.trim(),
+      });
+
+      // Backend returns complete updated CartResponse
+      setCart(response.data);
+      dispatch(setReduxCart(response.data));
+
+      setCouponCode("");
+    } catch (err) {
+      console.error("Failed to apply coupon:", err);
+
+      setCouponError(err.response?.data?.message || "Failed to apply coupon.");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = async () => {
+    try {
+      setCouponLoading(true);
+      setCouponError("");
+
+      const response = await api.delete("/api/v1/coupons/apply");
+
+      // Backend returns updated CartResponse
+      setCart(response.data);
+      dispatch(setReduxCart(response.data));
+
+      setCouponCode("");
+    } catch (err) {
+      console.error("Failed to remove coupon:", err);
+
+      setCouponError(err.response?.data?.message || "Failed to remove coupon.");
+    } finally {
+      setCouponLoading(false);
     }
   };
 
@@ -310,6 +362,48 @@ const CartPage = () => {
                   <span>Total</span>
 
                   <span>₹ {total.toLocaleString("en-IN")}</span>
+                </div>
+                {/* Coupon Input */}
+                <div className="mb-3">
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Discount code..."
+                      value={
+                        cart?.appliedCouponCode
+                          ? cart.appliedCouponCode
+                          : couponCode
+                      }
+                      onChange={(e) => {
+                        setCouponCode(e.target.value);
+                        setCouponError("");
+                      }}
+                      disabled={!!cart?.appliedCouponCode}
+                    />
+
+                    {cart?.appliedCouponCode ? (
+                      <Button
+                        variant="primary"
+                        onClick={handleRemoveCoupon}
+                        disabled={couponLoading}
+                      >
+                        {couponLoading ? "Removing..." : "Remove"}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="primary"
+                        onClick={handleApplyCoupon}
+                        disabled={couponLoading}
+                      >
+                        {couponLoading ? "Applying..." : "Apply"}
+                      </Button>
+                    )}
+                  </div>
+
+                  {couponError && (
+                    <div className="text-danger small mt-1">{couponError}</div>
+                  )}
                 </div>
 
                 <Button

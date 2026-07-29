@@ -587,7 +587,7 @@ const AddressSelect = () => {
 
             {cart.appliedCouponCode && discount > 0 && (
               <div className="d-flex justify-content-between text-success mb-2">
-                <span>Coupon ({cart.appliedCouponCode})</span>
+                <span>Discount ({cart.appliedCouponCode})</span>
 
                 <span>- ₹ {discount.toLocaleString("en-IN")}</span>
               </div>

@@ -11,7 +11,6 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resetCart } from "../redux/cartSlice";
-import { removeCoupon } from "../redux/couponSlice";
 
 import api from "../utils/api"; // adjust path if required
 
@@ -114,11 +113,9 @@ const PaymentPage = () => {
 
       // ONLY success performs cleanup
       dispatch(resetCart());
-      dispatch(removeCoupon());
+      
 
       localStorage.removeItem("cart");
-      localStorage.removeItem("appliedDiscount");
-      localStorage.removeItem("appliedCoupon");
       localStorage.removeItem("paymentMethod");
 
       navigate("/orderplace", {
@@ -299,7 +296,7 @@ const PaymentPage = () => {
 
             {cart.appliedCouponCode && discount > 0 && (
               <div className="d-flex justify-content-between text-success fw-semibold mb-2">
-                <span>Coupon ({cart.appliedCouponCode})</span>
+                <span>Discount ({cart.appliedCouponCode})</span>
 
                 <span>- ₹ {discount.toLocaleString("en-IN")}</span>
               </div>
