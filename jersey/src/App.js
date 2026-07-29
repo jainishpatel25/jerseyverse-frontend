@@ -98,18 +98,6 @@ function App() {
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/orderplace" element={<OrderSuccessPage />} />
 
-          {/* Admin Routes with layout */}
-          {/* <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<Dashboard/>} />
-          <Route path="orders" element={<OrdersPage />} />
-          <Route path="products" element={<ProductsListPage />} />
-          <Route path="add-product" element={<AddProductPage />} />
-          <Route path="customer" element={<Customers />} />
-          <Route path="coupon" element={<Coupons />} />
-          <Route path="login" element={<AdminLogin />} />
-       
-        
-        </Route> */}
           <Route path="/admin" element={<AdminLayout />}>
             {/* Protected admin routes */}
             <Route

@@ -1,43 +1,40 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import showToast from '../../utils/showToast';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import api from "../../utils/api";
+import showToast from "../../utils/showToast";
 
 function AdminLoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const API= process.env.REACT_APP_API_URL;
-
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await axios.post(`${API}/api/admin/login`, {
+      setError("");
+
+      const res = await api.post("/api/v1/auth/login", {
         email,
         password,
       });
 
-      // Store admin info
-      const { admin, token } = res.data;
+      const authData = res.data;
 
-localStorage.setItem('adminInfo', JSON.stringify({
-  token,
-  role: admin.role,
-  name: admin.name,
-  id: admin.id,
-  email: admin.email,
-}));
+      // Store authentication using the same structure
+      // expected by api.js
+      localStorage.setItem("userInfo", JSON.stringify(authData));
 
-      showToast('Admin login successful!', 'success');
+      showToast("Admin login successful!", "success");
 
-      // Navigate to admin dashboard
-      navigate('/admin/dashboard');
+      navigate("/admin/dashboard");
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed';
+      const msg = err.response?.data?.message || "Admin login failed";
+
       setError(msg);
-      showToast(msg, 'error');
+      showToast(msg, "error");
     }
   };
 
