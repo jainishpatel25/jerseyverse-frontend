@@ -27,7 +27,17 @@ function RegisterPage() {
 
       navigate("/login");
     } catch (err) {
-      const msg = err.response?.data?.message || "Something went wrong";
+      const errorData = err.response?.data;
+
+      const fieldErrors = errorData?.errors;
+
+      const firstFieldError = fieldErrors
+        ? Object.values(fieldErrors)[0]
+        : null;
+
+      const msg =
+        firstFieldError || errorData?.message || "Something went wrong";
+
       setError(msg);
       showToast(msg, "error");
     }

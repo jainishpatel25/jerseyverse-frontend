@@ -24,13 +24,23 @@ const Shop = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [minPrice, setMinPrice] = useState("");
+
   const [maxPrice, setMaxPrice] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [sortOrder, setSortOrder] = useState("");
+
   const [priceRange, setPriceRange] = useState({
     min: 0,
     max: 0,
   });
+
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [debouncedMaxPrice, setDebouncedMaxPrice] = useState("");
+
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -47,25 +57,23 @@ const Shop = () => {
           size: 5,
         };
 
-        if (searchTerm.trim()) {
-          params.search = searchTerm.trim();
+        if (debouncedSearchTerm.trim()) {
+          params.search = debouncedSearchTerm.trim();
         }
 
         if (minPrice !== "") {
           params.minPrice = minPrice;
         }
 
-        if (maxPrice !== "") {
-          params.maxPrice = maxPrice;
+        if (debouncedMaxPrice !== "") {
+          params.maxPrice = debouncedMaxPrice;
         }
 
         if (sortOrder) {
           params.sort = sortOrder;
         }
 
-        const res = await api.get("/api/v1/products", {
-          params,
-        });
+        const res = await api.get("/api/v1/products", { params });
 
         setJerseys(res.data.content || []);
         setTotalPages(res.data.totalPages);
@@ -78,7 +86,8 @@ const Shop = () => {
     };
 
     fetchJerseys();
-  }, [searchTerm, minPrice, maxPrice, sortOrder, page]);
+  }, [debouncedSearchTerm, minPrice, debouncedMaxPrice, sortOrder, page]);
+
   useEffect(() => {
     const fetchPriceRange = async () => {
       try {
@@ -112,6 +121,14 @@ const Shop = () => {
     return `${API}${imageUrl}`;
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedMaxPrice(maxPrice);
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [maxPrice, searchTerm]);
   return (
     <Container fluid className="p-0 m-0">
       <Row className="g-0">
@@ -181,50 +198,74 @@ const Shop = () => {
             </div>
           </div>
 
-          {loading ? (
-            <div className="text-center">
-              <Spinner animation="border" variant="primary" />
-            </div>
-          ) : error ? (
+          {error ? (
             <Alert variant="danger">{error}</Alert>
           ) : (
-            <Row className="g-4">
-              {jerseys?.map((product) => (
-                <Col key={product.id} md={3} sm={6} xs={12}>
-                  <div
-                    className="product-box"
-                    onClick={() => {
-                      dispatch(setSelectedProduct(product));
-                      navigate(`/product/${product.id}`);
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {/* <img src={`http://localhost:5000/uploads/${product.image}`} alt={product.name} className="product-img" /> */}
-                    <div className="position-relative">
-                      <img
-                        src={getProductImageUrl(product.imageUrl)}
-                        alt={product.name}
-                        className="product-img"
-                      />
-                      {product.stockStatus === "OUT_OF_STOCK" && (
-                        <span
-                          className="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 small"
-                          style={{ borderRadius: "0 0.5rem 0.5rem 0" }}
-                        >
-                          Out of Stock
-                        </span>
-                      )}
+            <>
+              {/* Full spinner only when there are no products yet */}
+              {loading && jerseys.length === 0 ? (
+                <div
+                  className="d-flex justify-content-center align-items-center"
+                  style={{ minHeight: "400px" }}
+                >
+                  <Spinner animation="border" variant="primary" />
+                </div>
+              ) : (
+                <>
+                  {/* Small loader during search/filter/sort */}
+                  {loading && (
+                    <div className="text-center mb-3">
+                      <Spinner animation="border" size="sm" />
+                      <span className="ms-2 text-muted">
+                        Updating products...
+                      </span>
                     </div>
+                  )}
 
-                    <div className="product-info">
-                      <h6>{product.name}</h6>
-                      <p>₹ {product.price.toLocaleString("en-IN")}.00</p>
-                      <hr />
-                    </div>
-                  </div>
-                </Col>
-              ))}
-            </Row>
+                  <Row className="g-4">
+                    {jerseys?.map((product) => (
+                      <Col key={product.id} md={3} sm={6} xs={12}>
+                        <div
+                          className="product-box"
+                          onClick={() => {
+                            dispatch(setSelectedProduct(product));
+                            navigate(`/product/${product.id}`);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <div className="position-relative">
+                            <img
+                              src={getProductImageUrl(product.imageUrl)}
+                              alt={product.name}
+                              className="product-img"
+                            />
+
+                            {product.stockStatus === "OUT_OF_STOCK" && (
+                              <span
+                                className="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 small"
+                                style={{
+                                  borderRadius: "0 0.5rem 0.5rem 0",
+                                }}
+                              >
+                                Out of Stock
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="product-info">
+                            <h6>{product.name}</h6>
+
+                            <p>₹ {product.price.toLocaleString("en-IN")}.00</p>
+
+                            <hr />
+                          </div>
+                        </div>
+                      </Col>
+                    ))}
+                  </Row>
+                </>
+              )}
+            </>
           )}
         </Col>
       </Row>
