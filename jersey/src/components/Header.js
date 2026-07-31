@@ -61,21 +61,12 @@ function Header() {
             <Nav.Link as={Link} to="/shop">
               Shop
             </Nav.Link>
-            {/* <Nav.Link as={Link} to="/pricing">Pricing</Nav.Link> */}
             <Nav.Link as={Link} to="/about">
               About Us
             </Nav.Link>
             <Nav.Link as={Link} to="/contactus">
               Contact Us
             </Nav.Link>
-            {/* <Button
-              variant="light"
-              size="sm"
-              className="rounded-pill px-3 py-1"
-              onClick={() => navigate('/admin')}
-            >
-              Admin
-            </Button> */}
           </Nav>
 
           {/* Right Side Icons */}
@@ -131,7 +122,7 @@ function Header() {
                   <Dropdown.Item as={Link} to="/profile">
                     Hi, {user.name}
                   </Dropdown.Item>
-                  <Dropdown.Item as={Link} to="/orders">
+                  <Dropdown.Item as={Link} to="/profile/orders">
                     Orders
                   </Dropdown.Item>
                   <Dropdown.Divider />

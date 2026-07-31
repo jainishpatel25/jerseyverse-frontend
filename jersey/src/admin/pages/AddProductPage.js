@@ -16,16 +16,28 @@ const AddProductPage = () => {
 
   const [categories, setCategories] = useState([]);
   const [preview, setPreview] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
     if (name === "image") {
-      const file = files[0];
-      setFormData((prev) => ({ ...prev, image: file }));
-      setPreview(URL.createObjectURL(file));
+      const file = files?.[0];
+
+      if (file) {
+        setFormData((prev) => ({
+          ...prev,
+          image: file,
+        }));
+
+        setPreview(URL.createObjectURL(file));
+      }
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      // Update normal form fields
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
@@ -54,10 +66,11 @@ const AddProductPage = () => {
     multipartData.append("image", formData.image);
 
     try {
+      setSubmitting(true);
+
       await api.post("/api/v1/admin/products", multipartData);
 
       alert("Product added successfully!");
-
       navigate("/admin/products");
     } catch (err) {
       console.error(
@@ -66,6 +79,8 @@ const AddProductPage = () => {
       );
 
       alert(err.response?.data?.message || "Failed to add product.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -97,7 +112,7 @@ const AddProductPage = () => {
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter jersey name"
+                placeholder="Enter product name"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -112,6 +127,8 @@ const AddProductPage = () => {
                 placeholder="Enter price"
                 value={formData.price}
                 onChange={handleChange}
+                min="0.01"
+                step="0.01"
                 required
               />
             </Form.Group>
@@ -158,21 +175,6 @@ const AddProductPage = () => {
                 ))}
               </Form.Select>
             </Form.Group>
-            {/* 
-            <Form.Group className="mb-3">
-              <Form.Label>Available Sizes</Form.Label>
-              <div className="d-flex flex-wrap gap-2">
-                {sizeOptions.map((size) => (
-                  <Form.Check
-                    key={size}
-                    type="checkbox"
-                    label={size}
-                    checked={formData.sizes.includes(size)}
-                    onChange={() => handleSizeChange(size)}
-                  />
-                ))}
-              </div>
-            </Form.Group> */}
 
             {preview && (
               <div className="mb-4">
@@ -189,8 +191,8 @@ const AddProductPage = () => {
               </div>
             )}
 
-            <Button type="submit" variant="primary">
-              Add Product
+            <Button type="submit" variant="primary" disabled={submitting}>
+              {submitting ? "Adding Product..." : "Add Product"}
             </Button>
           </Form>
         </Card>

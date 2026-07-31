@@ -46,9 +46,48 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Aboutus from "./components/Aboutus.js";
 
+import { useDispatch } from "react-redux";
+import api from "./utils/api";
+import { login, logout } from "./redux/userSlice";
+import { resetCart } from "./redux/cartSlice";
+
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const restoreUser = async () => {
+      const savedUser = localStorage.getItem("userInfo");
+
+      if (!savedUser) {
+        return;
+      }
+
+      try {
+        // Validate token + get fresh customer data
+        const response = await api.get("/api/v1/users/me");
+
+        const storedAuth = JSON.parse(savedUser);
+
+        const restoredUser = {
+          ...storedAuth,
+          ...response.data,
+        };
+
+        dispatch(login(restoredUser));
+      } catch (error) {
+        // Stored token is invalid/expired
+        dispatch(logout());
+        dispatch(resetCart());
+
+        console.log("Stored login session is no longer valid.");
+      }
+    };
+
+    restoreUser();
+  }, [dispatch]);
 
   useEffect(() => {
     // Enable Bootstrap toasts the React-friendly way
@@ -72,7 +111,6 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
 
           <Route path="/product/:id" element={<JerseyDetailPage />} />
-          {/* <Route path="/jersey" element={<JerseyDetailPage />} /> */}
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/contactus" element={<ContactUs />} />
