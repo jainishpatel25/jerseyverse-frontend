@@ -23,8 +23,11 @@ function AdminLoginPage() {
 
       const authData = res.data;
 
-      // Store authentication using the same structure
-      // expected by api.js
+      if (authData.role !== "ROLE_ADMIN") {
+        showToast("Only administrators can access this page.", "error");
+        return;
+      }
+
       localStorage.setItem("userInfo", JSON.stringify(authData));
 
       showToast("Admin login successful!", "success");

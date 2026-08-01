@@ -1,25 +1,25 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Navbar, Container, Collapse, Nav } from 'react-bootstrap';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Navbar, Container, Collapse, Nav } from "react-bootstrap";
 import "../styles/header.css";
 
 const Header = () => {
   const navigate = useNavigate();
 
   // Check if admin is logged in
-  const isLoggedIn = !!localStorage.getItem('adminInfo');
+  const isLoggedIn = !!localStorage.getItem("userInfo");
 
   const handleLogout = () => {
-    localStorage.removeItem('adminInfo');
-    navigate('/admin/login');
+    localStorage.removeItem("userInfo");
+    navigate("/admin/login");
   };
 
   return (
-    <Navbar
-      expand="md"
-      className="bg-white border-bottom py-2 sticky-top"
-    >
-      <Container fluid className="d-flex justify-content-between align-items-center px-2 px-md-4">
+    <Navbar expand="md" className="bg-white border-bottom py-2 sticky-top">
+      <Container
+        fluid
+        className="d-flex justify-content-between align-items-center px-2 px-md-4"
+      >
         <div className="d-flex align-items-center">
           <img
             src="/images/jslogoadmin.png"
@@ -30,7 +30,9 @@ const Header = () => {
             <h6 className="m-0 fw-bold text-dark">Jersey Verse</h6>
             <small className="text-muted">Dashboard Panel</small>
           </div>
-          <span className="ms-3 badge rounded-pill bg-light text-dark border">Admin</span>
+          <span className="ms-3 badge rounded-pill bg-light text-dark border">
+            Admin
+          </span>
         </div>
 
         {/* Logout Button only visible if admin is logged in */}
