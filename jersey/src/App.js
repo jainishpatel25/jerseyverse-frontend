@@ -66,10 +66,15 @@ function App() {
       }
 
       try {
-        // Validate token + get fresh customer data
-        const response = await api.get("/api/v1/users/me");
-
         const storedAuth = JSON.parse(savedUser);
+
+        if (storedAuth.role === "ROLE_ADMIN") {
+          dispatch(login(storedAuth));
+
+          return;
+        }
+
+        const response = await api.get("/api/v1/users/me");
 
         const restoredUser = {
           ...storedAuth,
