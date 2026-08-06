@@ -349,16 +349,6 @@ The JerseyVerse Frontend is part of the complete **JerseyVerse** full-stack Foot
 
 > **Backend Repository:** https://github.com/jainishpatel25/jerseyverse-backend-java
 
-## 🔗 Related Repository
-
-The JerseyVerse Frontend is part of the complete **JerseyVerse** full-stack Football Jersey E-Commerce application.
-
-| Repository | Description |
-|------------|-------------|
-| **JerseyVerse Backend** | Spring Boot REST API providing authentication, product management, cart, orders, coupons, invoices, and administrative features. |
-
-> **Backend Repository:** https://github.com/jainishpatel25/jerseyverse-backend-java
-
 ## 🚀 Future Improvements
 
 The following enhancements can be considered for future versions of the project:
