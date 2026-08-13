@@ -115,6 +115,16 @@ const JerseyDetailPage = () => {
     );
   }
 
+  const getProductImageUrl = (imageUrl) => {
+    if (!imageUrl) return "";
+
+    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      return imageUrl;
+    }
+
+    return `${API}${imageUrl}`;
+  };
+
   return (
     <Container className="py-4">
       <div className="text-muted mb-3">
@@ -127,7 +137,7 @@ const JerseyDetailPage = () => {
         {/* Left: Product Image */}
         <Col md={6} className="text-center">
           <img
-            src={`${API}${product.imageUrl}`}
+            src={getProductImageUrl(item.imageUrl)}
             alt={product.name}
             className="img-fluid"
             style={{ maxHeight: "500px", objectFit: "contain" }}

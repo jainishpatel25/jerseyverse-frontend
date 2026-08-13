@@ -1,13 +1,12 @@
-
-import React, { useState, useRef, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import './styles/Productlist.css';
-import { FaArrowLeft, FaArrowRight, FaStar } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import api from '../utils/api';
-import { useDispatch } from 'react-redux';
-import { motion } from 'framer-motion';
-import { setSelectedProduct } from '../redux/productSlice';
+import React, { useState, useRef, useEffect } from "react";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import "./styles/Productlist.css";
+import { FaArrowLeft, FaArrowRight, FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
+import { useDispatch } from "react-redux";
+import { motion } from "framer-motion";
+import { setSelectedProduct } from "../redux/productSlice";
 
 const ProductCarouselSection = () => {
   const [products, setProducts] = useState([]);
@@ -21,11 +20,11 @@ const ProductCarouselSection = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await api.get('/api/v1/products/latest'); // adjust endpoint if needed
-        console.log('latest products: ',res.data);
+        const res = await api.get("/api/v1/products/latest"); // adjust endpoint if needed
+        console.log("latest products: ", res.data);
         setProducts(res.data); // show latest 10 products in carousel
       } catch (err) {
-        console.error('Failed to fetch products:', err);
+        console.error("Failed to fetch products:", err);
       }
     };
     fetchProducts();
@@ -34,16 +33,16 @@ const ProductCarouselSection = () => {
   const handleScroll = (direction) => {
     const container = carouselRef.current;
     const scrollAmount = container.offsetWidth / 1.2;
-    if (direction === 'left') {
-      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    if (direction === "left") {
+      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
     } else {
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      handleScroll('right');
+      handleScroll("right");
     }, 3000); // Auto-scroll every 7 seconds
 
     return () => clearInterval(interval);
@@ -54,11 +53,22 @@ const ProductCarouselSection = () => {
     navigate(`/product/${product.id}`);
   };
 
+  const getProductImageUrl = (imageUrl) => {
+    if (!imageUrl) return "";
+
+    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      return imageUrl;
+    }
+
+    return `${API}${imageUrl}`;
+  };
+
   return (
-    <motion.section className="product-carousel"
-     initial={{ opacity: 0, y: 50 }}
+    <motion.section
+      className="product-carousel"
+      initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
       viewport={{ once: true }}
     >
       <Container>
@@ -67,36 +77,43 @@ const ProductCarouselSection = () => {
           <Col>
             <h2>Latest Arrivals</h2>
             <p className="text-muted">
-              Discover the newest football jerseys and exclusive fan collections.
+              Discover the newest football jerseys and exclusive fan
+              collections.
             </p>
           </Col>
           <Col className="text-end d-none d-md-block">
-            <Button variant="link" className="seeallbtn" onClick={() => navigate('/shop')}>
+            <Button
+              variant="link"
+              className="seeallbtn"
+              onClick={() => navigate("/shop")}
+            >
               See all →
             </Button>
           </Col>
         </Row>
 
         <div className="carousel-wrapper">
-          <Button className="carousel-nav left" onClick={() => handleScroll('left')}>
+          <Button
+            className="carousel-nav left"
+            onClick={() => handleScroll("left")}
+          >
             <FaArrowLeft />
           </Button>
 
           <div className="carousel-inner" ref={carouselRef}>
-            {products?.map((item,index) => (
+            {products?.map((item, index) => (
               <motion.div
                 key={item.id}
                 className="product-card"
                 onClick={() => handleSelect(item)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
                 <img
-                  // src={`${API}/uploads/${item.image}`}  //node backend
-                  src={`${API}${item.imageUrl}`} //java backend
+                  src={getProductImageUrl(item.imageUrl)}
                   alt={item.name}
                   className="product-image"
                 />
@@ -107,12 +124,17 @@ const ProductCarouselSection = () => {
                   ))}
                   <span className="text-muted ms-2">(0)</span>
                 </div>
-                <p className="fw-bold">₹ {item.price.toLocaleString('en-IN')}.00</p>
+                <p className="fw-bold">
+                  ₹ {item.price.toLocaleString("en-IN")}.00
+                </p>
               </motion.div>
             ))}
           </div>
 
-          <Button className="carousel-nav right" onClick={() => handleScroll('right')}>
+          <Button
+            className="carousel-nav right"
+            onClick={() => handleScroll("right")}
+          >
             <FaArrowRight />
           </Button>
         </div>

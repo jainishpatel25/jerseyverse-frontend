@@ -37,7 +37,7 @@ const ProductListPage = () => {
     } catch (error) {
       console.error(
         "Failed to fetch products:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
 
       setProducts([]);
@@ -56,7 +56,7 @@ const ProductListPage = () => {
     } catch (error) {
       console.error(
         "Failed to fetch categories:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   };
@@ -72,9 +72,7 @@ const ProductListPage = () => {
 
   const handleEdit = async (product) => {
     try {
-      const response = await api.get(
-        `/api/v1/admin/products/${product.id}`
-      );
+      const response = await api.get(`/api/v1/admin/products/${product.id}`);
 
       setCurrentProduct(response.data);
       setNewImage(null);
@@ -82,7 +80,7 @@ const ProductListPage = () => {
     } catch (error) {
       console.error(
         "Failed to fetch product details:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   };
@@ -93,9 +91,8 @@ const ProductListPage = () => {
 
   const totalStock =
     currentProduct.variants?.reduce(
-      (total, variant) =>
-        total + Number(variant.stock || 0),
-      0
+      (total, variant) => total + Number(variant.stock || 0),
+      0,
     ) || 0;
 
   // --------------------------------------------------
@@ -126,7 +123,7 @@ const ProductListPage = () => {
     }
 
     const exists = currentProduct.variants.some(
-      (variant) => variant.size === size
+      (variant) => variant.size === size,
     );
 
     if (exists) {
@@ -153,7 +150,7 @@ const ProductListPage = () => {
     setCurrentProduct({
       ...currentProduct,
       variants: currentProduct.variants.filter(
-        (variant) => variant.size !== size
+        (variant) => variant.size !== size,
       ),
     });
   };
@@ -185,12 +182,9 @@ const ProductListPage = () => {
 
       formData.append(
         "product",
-        new Blob(
-          [JSON.stringify(updateRequest)],
-          {
-            type: "application/json",
-          }
-        )
+        new Blob([JSON.stringify(updateRequest)], {
+          type: "application/json",
+        }),
       );
 
       // Image is optional during update
@@ -200,7 +194,7 @@ const ProductListPage = () => {
 
       const response = await api.put(
         `/api/v1/admin/products/${currentProduct.id}`,
-        formData
+        formData,
       );
 
       console.log("Product updated:", response.data);
@@ -212,7 +206,7 @@ const ProductListPage = () => {
     } catch (error) {
       console.error(
         "Failed to update product:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   };
@@ -245,9 +239,7 @@ const ProductListPage = () => {
         return;
       }
 
-      await api.delete(
-        `/api/v1/admin/products/${currentProduct.id}`
-      );
+      await api.delete(`/api/v1/admin/products/${currentProduct.id}`);
 
       setShowDelete(false);
 
@@ -255,9 +247,19 @@ const ProductListPage = () => {
     } catch (error) {
       console.error(
         "Failed to delete product:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
+  };
+
+  const getProductImageUrl = (imageUrl) => {
+    if (!imageUrl) return "";
+
+    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      return imageUrl;
+    }
+
+    return `${API}${imageUrl}`;
   };
 
   return (
@@ -290,7 +292,7 @@ const ProductListPage = () => {
 
                     <td>
                       <img
-                        src={`${API}${product.imageUrl}`}
+                        src={getProductImageUrl(item.imageUrl)}
                         alt={product.name}
                         style={{
                           width: "60px",
@@ -300,12 +302,7 @@ const ProductListPage = () => {
                       />
                     </td>
 
-                    <td>
-                      ₹
-                      {Number(product.price).toLocaleString(
-                        "en-IN"
-                      )}
-                    </td>
+                    <td>₹{Number(product.price).toLocaleString("en-IN")}</td>
 
                     <td>{product.totalStock}</td>
 
@@ -331,10 +328,7 @@ const ProductListPage = () => {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan="6"
-                    className="text-center text-muted"
-                  >
+                  <td colSpan="6" className="text-center text-muted">
                     No products found.
                   </td>
                 </tr>
@@ -361,7 +355,7 @@ const ProductListPage = () => {
                 </p>
 
                 <img
-                  src={`${API}${product.imageUrl}`}
+                  src={getProductImageUrl(item.imageUrl)}
                   alt={product.name}
                   style={{
                     width: "100px",
@@ -371,16 +365,12 @@ const ProductListPage = () => {
                 />
 
                 <p className="mt-2">
-                  <strong>Price:</strong>{" "}
-                  ₹
-                  {Number(product.price).toLocaleString(
-                    "en-IN"
-                  )}
+                  <strong>Price:</strong> ₹
+                  {Number(product.price).toLocaleString("en-IN")}
                 </p>
 
                 <p>
-                  <strong>Total Stock:</strong>{" "}
-                  {product.totalStock}
+                  <strong>Total Stock:</strong> {product.totalStock}
                 </p>
 
                 <div className="d-flex gap-2 mt-2">
@@ -405,9 +395,7 @@ const ProductListPage = () => {
               </div>
             ))
           ) : (
-            <p className="text-center text-muted">
-              No products found.
-            </p>
+            <p className="text-center text-muted">No products found.</p>
           )}
         </div>
 
@@ -495,15 +483,10 @@ const ProductListPage = () => {
                     })
                   }
                 >
-                  <option value="">
-                    Select category
-                  </option>
+                  <option value="">Select category</option>
 
                   {categories.map((category) => (
-                    <option
-                      key={category.id}
-                      value={category.id}
-                    >
+                    <option key={category.id} value={category.id}>
                       {category.name}
                     </option>
                   ))}
@@ -515,75 +498,57 @@ const ProductListPage = () => {
               <Form.Group className="mt-3">
                 <Form.Label>Total Stock</Form.Label>
 
-                <Form.Control
-                  type="number"
-                  value={totalStock}
-                  disabled
-                />
+                <Form.Control type="number" value={totalStock} disabled />
 
                 <Form.Text className="text-muted">
-                  Total stock is calculated from all size
-                  variants.
+                  Total stock is calculated from all size variants.
                 </Form.Text>
               </Form.Group>
 
               {/* Variants */}
 
               <Form.Group className="mt-3">
-                <Form.Label>
-                  Size Variants / Stock
-                </Form.Label>
+                <Form.Label>Size Variants / Stock</Form.Label>
 
                 {currentProduct.variants?.length > 0 ? (
-                  currentProduct.variants.map(
-                    (variant, index) => (
-                      <div
-                        key={variant.size}
-                        className="d-flex align-items-center gap-2 mb-2"
+                  currentProduct.variants.map((variant, index) => (
+                    <div
+                      key={variant.size}
+                      className="d-flex align-items-center gap-2 mb-2"
+                    >
+                      <Form.Control
+                        type="text"
+                        value={variant.size}
+                        disabled
+                        style={{
+                          maxWidth: "100px",
+                        }}
+                      />
+
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        value={variant.stock}
+                        onChange={(e) =>
+                          handleVariantStockChange(index, e.target.value)
+                        }
+                        style={{
+                          maxWidth: "150px",
+                        }}
+                      />
+
+                      <Button
+                        type="button"
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => handleRemoveVariant(variant.size)}
                       >
-                        <Form.Control
-                          type="text"
-                          value={variant.size}
-                          disabled
-                          style={{
-                            maxWidth: "100px",
-                          }}
-                        />
-
-                        <Form.Control
-                          type="number"
-                          min="0"
-                          value={variant.stock}
-                          onChange={(e) =>
-                            handleVariantStockChange(
-                              index,
-                              e.target.value
-                            )
-                          }
-                          style={{
-                            maxWidth: "150px",
-                          }}
-                        />
-
-                        <Button
-                          type="button"
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() =>
-                            handleRemoveVariant(
-                              variant.size
-                            )
-                          }
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    )
-                  )
+                        Remove
+                      </Button>
+                    </div>
+                  ))
                 ) : (
-                  <p className="text-muted">
-                    No variants added yet.
-                  </p>
+                  <p className="text-muted">No variants added yet.</p>
                 )}
 
                 {/* Add Variant */}
@@ -591,27 +556,19 @@ const ProductListPage = () => {
                 <Form.Select
                   className="mt-2"
                   value=""
-                  onChange={(e) =>
-                    handleAddVariant(e.target.value)
-                  }
+                  onChange={(e) => handleAddVariant(e.target.value)}
                 >
-                  <option value="">
-                    Add Size
-                  </option>
+                  <option value="">Add Size</option>
 
                   {sizeOptions
                     .filter(
                       (size) =>
                         !currentProduct.variants?.some(
-                          (variant) =>
-                            variant.size === size
-                        )
+                          (variant) => variant.size === size,
+                        ),
                     )
                     .map((size) => (
-                      <option
-                        key={size}
-                        value={size}
-                      >
+                      <option key={size} value={size}>
                         {size}
                       </option>
                     ))}
@@ -622,13 +579,11 @@ const ProductListPage = () => {
 
               {currentProduct.imageUrl && (
                 <div className="mt-3">
-                  <Form.Label>
-                    Current Image
-                  </Form.Label>
+                  <Form.Label>Current Image</Form.Label>
 
                   <div>
                     <img
-                      src={`${API}${currentProduct.imageUrl}`}
+                      src={getProductImageUrl(item.imageUrl)}
                       alt={currentProduct.name}
                       style={{
                         width: "120px",
@@ -643,18 +598,12 @@ const ProductListPage = () => {
               {/* Replace Image */}
 
               <Form.Group className="mt-3">
-                <Form.Label>
-                  Replace Image (Optional)
-                </Form.Label>
+                <Form.Label>Replace Image (Optional)</Form.Label>
 
                 <Form.Control
                   type="file"
                   accept="image/*"
-                  onChange={(e) =>
-                    setNewImage(
-                      e.target.files?.[0] || null
-                    )
-                  }
+                  onChange={(e) => setNewImage(e.target.files?.[0] || null)}
                 />
 
                 {newImage && (
@@ -677,10 +626,7 @@ const ProductListPage = () => {
               Cancel
             </Button>
 
-            <Button
-              variant="primary"
-              onClick={handleSave}
-            >
+            <Button variant="primary" onClick={handleSave}>
               Save
             </Button>
           </Modal.Footer>
@@ -688,14 +634,9 @@ const ProductListPage = () => {
 
         {/* ================= DELETE MODAL ================= */}
 
-        <Modal
-          show={showDelete}
-          onHide={() => setShowDelete(false)}
-        >
+        <Modal show={showDelete} onHide={() => setShowDelete(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>
-              Delete Confirmation
-            </Modal.Title>
+            <Modal.Title>Delete Confirmation</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
@@ -704,17 +645,11 @@ const ProductListPage = () => {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => setShowDelete(false)}
-            >
+            <Button variant="secondary" onClick={() => setShowDelete(false)}>
               Cancel
             </Button>
 
-            <Button
-              variant="danger"
-              onClick={handleDeleteConfirm}
-            >
+            <Button variant="danger" onClick={handleDeleteConfirm}>
               Delete
             </Button>
           </Modal.Footer>

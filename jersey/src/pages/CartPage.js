@@ -200,6 +200,16 @@ const CartPage = () => {
     );
   }
 
+  const getProductImageUrl = (imageUrl) => {
+    if (!imageUrl) return "";
+
+    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      return imageUrl;
+    }
+
+    return `${API}${imageUrl}`;
+  };
+
   return (
     <Container className="my-5">
       <h5 className="mb-4">
@@ -239,7 +249,7 @@ const CartPage = () => {
                 {/* PRODUCT IMAGE */}
                 <Col xs={3}>
                   <img
-                    src={`${process.env.REACT_APP_API_URL}${item.imageUrl}`}
+                    src={getProductImageUrl(item.imageUrl)}
                     alt={item.productName}
                     className="img-fluid rounded"
                   />
