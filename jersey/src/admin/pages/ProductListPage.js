@@ -292,7 +292,7 @@ const ProductListPage = () => {
 
                     <td>
                       <img
-                        src={getProductImageUrl(item.imageUrl)}
+                        src={getProductImageUrl(product.imageUrl)}
                         alt={product.name}
                         style={{
                           width: "60px",
@@ -355,7 +355,7 @@ const ProductListPage = () => {
                 </p>
 
                 <img
-                  src={getProductImageUrl(item.imageUrl)}
+                  src={getProductImageUrl(product.imageUrl)}
                   alt={product.name}
                   style={{
                     width: "100px",
@@ -583,7 +583,7 @@ const ProductListPage = () => {
 
                   <div>
                     <img
-                      src={getProductImageUrl(item.imageUrl)}
+                      src={getProductImageUrl(currentProduct.imageUrl)}
                       alt={currentProduct.name}
                       style={{
                         width: "120px",

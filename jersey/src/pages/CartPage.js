@@ -53,6 +53,8 @@ const CartPage = () => {
   const tax = Number(cart?.tax || 0);
   const total = Number(cart?.total || 0);
 
+  const API = process.env.REACT_APP_API_URL;
+
   const handleQuantityChange = async (cartItemId, newQuantity) => {
     // Backend requires quantity >= 1
     if (newQuantity < 1) {

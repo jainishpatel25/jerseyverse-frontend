@@ -137,7 +137,7 @@ const JerseyDetailPage = () => {
         {/* Left: Product Image */}
         <Col md={6} className="text-center">
           <img
-            src={getProductImageUrl(item.imageUrl)}
+            src={getProductImageUrl(product.imageUrl)}
             alt={product.name}
             className="img-fluid"
             style={{ maxHeight: "500px", objectFit: "contain" }}
