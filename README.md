@@ -358,6 +358,23 @@ The JerseyVerse Frontend is part of the complete **JerseyVerse** full-stack Foot
 
 > **Backend Repository:** https://github.com/jainishpatel25/jerseyverse-backend-java
 
+## 🚀 Deployment
+
+The JerseyVerse application is deployed as a full-stack production system using the following services:
+
+| Component             | Platform        |
+| --------------------- | --------------- |
+| Frontend              | Vercel          |
+| Backend               | Render          |
+| Backend Deployment    | Docker          |
+| Database              | Neon PostgreSQL |
+| Product Image Storage | Cloudinary      |
+
+The React frontend is deployed on **Vercel** and communicates with the Spring Boot REST API deployed on **Render**.
+
+The backend is containerized using **Docker**, connected to a production **PostgreSQL database hosted on Neon**, and uses **Cloudinary** for product image storage.
+
+
 ## 🚀 Future Improvements
 
 The following enhancements can be considered for future versions of the project:
