@@ -9,6 +9,15 @@ The frontend is designed using a component-based architecture with React, Redux 
 > **Status:** Completed ✅  
 > Frontend Development • Backend Integration • Module Testing • End-to-End Regression Testing
 
+## 🌐 Live Demo
+
+The JerseyVerse frontend is live and available here:
+
+**🔗 [Visit JerseyVerse](https://jerseyverse-frontend.vercel.app)**
+
+The application is deployed on **Vercel** and communicates with the production Spring Boot backend through REST APIs.
+
+
 ## ✨ Features
 
 ### 🛍️ Customer Features
